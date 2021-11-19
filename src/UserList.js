@@ -1,9 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
-function User({ user, onRemove, onToggle }) {
-  useEffect(() => {
-    console.log(user);
-  });
+const User = React.memo(function User({ user, onRemove, onToggle }) {
+  console.log('user');
   return (
     <div>
       <b
@@ -17,13 +15,13 @@ function User({ user, onRemove, onToggle }) {
       </b>
       &nbsp;
       <span>({user.email})</span>
-      {/* 아래의 경우 onClick 이벤트 핸들러 안에 함수를 넣음으로써 첫번째 인자가 이벤트 객체가 아니게 되었다. */}
       <button onClick={() => onRemove(user.id)}>삭제</button>
     </div>
   );
-}
+});
 
 function UserList({ users, onRemove, onToggle }) {
+  console.log('userlist');
   return (
     <div>
       {users.map((user) => (
@@ -38,10 +36,14 @@ function UserList({ users, onRemove, onToggle }) {
   );
 }
 
-export default UserList;
+export default React.memo(UserList);
 
-// * deps 파라미터를 생략한다면, 컴포넌트가 리렌더링 될 때마다 호출이된다.
+// 예를 들어서, User 컴포넌트에 b 와 button 에 onClick 으로 설정해준 함수들은, 해당 함수들을 useCallback 으로 재사용한다고 해서 리렌더링을 막을 수 있는것은 아니므로, 굳이 그렇게 할 필요 없습니다.
 
-// * 리액트 컴포넌트는 기본적으로 부모컴포넌트가 리렌더링 되면 자식 컴포넌트 또한 리렌더링이 된다. 바뀐 내용이 없다 할지라도...
+// 왜냐하면 users 값이 변경 되어 props로 전달되는 users값이 변경되고 이로인해 UserList 리렌더링 하게되므로
 
-// * 물론 실제 DOM에 변화가 반영되는 것은 바뀐 내용이 있는 컴포넌트에만 해당된다. 하지만 Virtual DOM에는 모든걸 다 렌더링하고 있다는거다. 그러기에 컴포넌트의 최적화 과정이 필요하다!!
+// * 추가적으로, 렌더링 최적화 하지 않을 컴포넌트에 React.memo를 사용하는 것은, 불필요한 props 비교만 하는 것이기 때문에 실제로 렌더링을 방지할수있는 상황이 있는 경우에만 사용해야한다.
+
+// * 추가적으로, React.memo에서 두 번째 파라미터에 propsAreEqual 이라는 함수를 사용하여 특정 값들만 비교를 하는 것도 가능하다. 하지만 이것을 잘못사용한다면 오히려 의도치 않은 버그들이 발생할 수 있다.
+
+// * 특정 비교값이 false 인 경우 특정 비교값만 새로운 props로 전달 되기 때문인가?? -> 아니다 return 값이 false 인 경우 새로운 newProps 전체가 이동  return 값이 true인 경우 메모라이즈된 이전 Props가 props로 넘어간다.

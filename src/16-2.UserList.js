@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 
 function User({ user, onRemove, onToggle }) {
   useEffect(() => {
-    console.log('user 값이 설정됨');
+    // 비동기
+    console.log('user 값이 설정됨 등록 or 업데이트');
     console.log(user);
     return () => {
-      console.log('user가 바뀌기 전..');
+      console.log('user가 바뀌기 전.. or 언마운트 될시');
       console.log(user);
     };
   }, [user]);

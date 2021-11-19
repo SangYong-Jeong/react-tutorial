@@ -1,8 +1,9 @@
-import React, { useRef, useState, useMemo, useCallback } from 'react';
-import UserList from './UserList';
+import React, { useRef, useState } from 'react';
+import UserList from './UserList.js';
 import CreateUser from './CreateUser';
 
-function countActiveUsers(users) {
+//countActiveUsers 함수에서 콘솔에 메시지를 출력하도록 한 이유는, 이 함수가 호출될때마다 우리가 알수있게 하기 위함입니다.
+function countActieUsers(users) {
   console.log('활성 사용자 수를 세는중...');
   return users.filter((user) => user.active).length;
 }
@@ -13,13 +14,13 @@ function App() {
     email: '',
   });
   const { username, email } = inputs;
-  const onChange = useCallback((e) => {
+  const onChange = (e) => {
     const { name, value } = e.target;
-    setInputs((inputs) => ({
+    setInputs({
       ...inputs,
       [name]: value,
-    }));
-  }, []);
+    });
+  };
   const [users, setUsers] = useState([
     {
       id: 1,
@@ -42,34 +43,36 @@ function App() {
   ]);
 
   const nextId = useRef(4);
-  const onCreate = useCallback(() => {
+
+  const onCreate = () => {
     const user = {
       id: nextId.current,
       username,
       email,
     };
-    setUsers((users) => users.concat(user));
-
+    setUsers(users.concat(user));
     setInputs({
       username: '',
       email: '',
     });
     nextId.current += 1;
-  }, [username, email]);
+  };
 
-  const onRemove = useCallback((id) => {
-    // user.id 가 파라미터로 일치하지 않는 원소만 추출해서 새로운 배열을 만듬
-    // = user.id 가 id 인 것을 제거함
-    setUsers((users) => users.filter((user) => user.id !== id));
-  }, []);
-  const onToggle = useCallback((id) => {
-    setUsers((users) =>
+  const onRemove = (id) => {
+    setUsers(users.filter((user) => user.id !== id));
+    nextId.current -= 1;
+  };
+
+  const onToggle = (id) => {
+    setUsers(
       users.map((user) =>
         user.id === id ? { ...user, active: !user.active } : user
       )
     );
-  }, []);
-  const count = useMemo(() => countActiveUsers(users), [users]);
+  };
+
+  const count = countActieUsers(users);
+
   return (
     <>
       <CreateUser
@@ -86,4 +89,6 @@ function App() {
 
 export default App;
 
-// * 리액트 개발을 할 때는, useCallback, useMemo, React.memo는 컴포넌트의 성능을 실제로 개선 할 수 있는 상황에서만 하자
+// 활성 사용자 수를 세는건, users에 변화가 있을때만 세야되는건데, input 값이 바뀔 때에도 컴포넌트가 리렌더링 되므로 이렇게 불필요할때에도 호출하여서 자원이 낭비되고 있다.
+
+// 이러한 사황에는 useMemo 라는 Hook 함수를 사용하면 성능을 최적화 할 수 있다. Memo 는 "memoized" 를 의미하는데, 이는, 이전에 계산 한 값을 재사용한다는 의미를 가지고 있습니다.

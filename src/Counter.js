@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 
 function Counter() {
-  const [number, setNumber] = useState(0); // useState의 기본값을 설정하지 않을 시 첫 번째, 두 번째 배열 요소 전부 다 undefined반환
-
+  const [number, setNumber] = useState(0);
   const onIncrease = () => {
-    setNumber((prevNumber) => prevNumber + 1);
+    setNumber((prevNumber) => prevNumber + 1); // 함수형 업데이트
   };
   const onDecrease = () => {
     setNumber((prevNumber) => prevNumber - 1);
@@ -20,9 +19,18 @@ function Counter() {
 
 export default Counter;
 
-// 의문 ? 특정 값이 바뀌어서 매번 함수가 호출되고 렌더링 되었을 대 useState가 돌아가는데 그럼 매번 state 값은 초기화되는 것이 아닌가?
-// 해답 : 첫 번째 렌더링 시 state가 없기에 state 변수를 선언 두 번째 렌더링 부터는 state에 있는 해당 변수를 읽는다. 기본값으로 넣은 인자는 무시된다.
+// * 상태를 관리하게 될 때 useState를 사용하는것 말고도 다른 방법이 있다. 바로 useReducer를 사용하는거다. 이 Hook 함수를 사용하면 컴포넌트의 상태 업데이트 로직을 컴포넌트에서 분리시킬 수 있다.
 
-// React의 Hooks는 첫 번째 렌더링 때 일어났던 호출순서에 따라 Hook을 기억한다.(React가 Hook이 호출되는 순서에 의존한다는 것입니다. )
+// * 즉, 상태 업데이트 로직을 컴포넌트 바깥에 작성 할 수도 있고, 심지어 다른 파일에 작성 후 불러와서 사용할 수도 있다.
 
-// state의 값을 변경하는 setter에 값을 줘서 해당 state의 값을 변경하는 방법이 있고, setter의 인자에 함수를 주고 그 함수의 매개변수에 이전 state의 값이 들어가면 그것을 이용해서 처리하는 로직을 짤 수도 있다.
+// * useState와 useReducer를 비교해 학습하면 좋을듯
+
+// * reducer는 현재 상태와 액션 객체를 파라미터로 받아와서 새로운 상태를 반환해주는 함수이다.
+
+/* 
+ex) function reducer (state, action) {
+  새로운 상태를 만드는 로직
+  const nextState = ...
+  return nextState
+}
+*/
