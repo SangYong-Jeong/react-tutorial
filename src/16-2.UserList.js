@@ -2,8 +2,13 @@ import React, { useEffect } from 'react';
 
 function User({ user, onRemove, onToggle }) {
   useEffect(() => {
+    console.log('user 값이 설정됨');
     console.log(user);
-  });
+    return () => {
+      console.log('user가 바뀌기 전..');
+      console.log(user);
+    };
+  }, [user]);
   return (
     <div>
       <b
@@ -40,8 +45,6 @@ function UserList({ users, onRemove, onToggle }) {
 
 export default UserList;
 
-// * deps 파라미터를 생략한다면, 컴포넌트가 리렌더링 될 때마다 호출이된다.
+// ** deps(의존성 배열)에 특정 값을 넣으면 컴포넌트가 처음 마운트 될 때에도 호출이 되고, 지정한 값이 바뀔 때에도 호출이 된다. dpes 안에 특정 값이 있다면 언마운트시에도 호출, 바뀌기 직전에도 호출
 
-// * 리액트 컴포넌트는 기본적으로 부모컴포넌트가 리렌더링 되면 자식 컴포넌트 또한 리렌더링이 된다. 바뀐 내용이 없다 할지라도...
-
-// * 물론 실제 DOM에 변화가 반영되는 것은 바뀐 내용이 있는 컴포넌트에만 해당된다. 하지만 Virtual DOM에는 모든걸 다 렌더링하고 있다는거다. 그러기에 컴포넌트의 최적화 과정이 필요하다!!
+// useEffect 안에서 사용하는 상태나, props가 있다면 useEffect의 deps에 넣어주어야 한다. 그렇지않은면 useEffect에 등록한 함수가 실행 될 때 최신 props/ 상태를 가르키지 않게 된다.

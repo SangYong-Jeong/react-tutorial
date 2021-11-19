@@ -1,9 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 function User({ user, onRemove, onToggle }) {
-  useEffect(() => {
-    console.log(user);
-  });
   return (
     <div>
       <b
@@ -40,8 +37,8 @@ function UserList({ users, onRemove, onToggle }) {
 
 export default UserList;
 
-// * deps 파라미터를 생략한다면, 컴포넌트가 리렌더링 될 때마다 호출이된다.
+// 대문자로 시작하는 사용자 정의 컴포넌트는 해당 컴포넌트를 부른 컴포넌트와 같은 파일안에 존재해야한다. import로 부르거나
 
-// * 리액트 컴포넌트는 기본적으로 부모컴포넌트가 리렌더링 되면 자식 컴포넌트 또한 리렌더링이 된다. 바뀐 내용이 없다 할지라도...
+// 배열에 있는 항목을 제거하는것 역시 추가할때와 마찬가지로 불변성을 지켜가면서 업데이트를 해주어야 한다.
 
-// * 물론 실제 DOM에 변화가 반영되는 것은 바뀐 내용이 있는 컴포넌트에만 해당된다. 하지만 Virtual DOM에는 모든걸 다 렌더링하고 있다는거다. 그러기에 컴포넌트의 최적화 과정이 필요하다!!
+// ** 불변성을 지키면서 특정 원소를 배열에서 제거하기 위해서는 filter 배열 내장함수를 사용하는 것이 가장 편하다.
